@@ -6,6 +6,7 @@ namespace AS2223_4G_INF_AngeliniAlex_RubricaCSV
         public string[] Cognomi = new string[100];
         public string[] Citta = new string[100];
         static int righe;
+        static bool file;
         public Form1()
         {
             InitializeComponent();
@@ -20,6 +21,7 @@ namespace AS2223_4G_INF_AngeliniAlex_RubricaCSV
             { 
                 //una volta selezionato il file, il suo indirizzo viene scritto nella textbox "txtFile"
                 txtFile.Text = finestrafile.FileName;
+                file = true;
             }
             StreamReader fi = new StreamReader(finestrafile.FileName);
 
@@ -47,41 +49,74 @@ namespace AS2223_4G_INF_AngeliniAlex_RubricaCSV
 
         private void btnVisualizza_Click(object sender, EventArgs e)
         {
-            //leggo l'opzione del combobox
-            string combobox = cmbCognome.Text;
-            //leggo la textbox Cognome
-            string Cognome = txtCognome.Text;
+            if (file == true) 
+            {            
+                //leggo l'opzione inserita del combobox
+                string combobox = cmbCognome.Text;
+                if (combobox == "")
+                {
+                    MessageBox.Show("Inserisci un'opzione");
+                    return;
 
-            if(cmbCognome.Text == "Inizia per:") 
-            { 
-                for(int i = 0; i < righe; i++) 
-                {
-                    if (Cognomi[i].ToUpper().StartsWith(Cognome.ToUpper())) 
-                    {
-                        lstElenco.Items.Add(Nomi[i] + " " + Cognomi[i] + " " + Citta[i] + " ");                
-                    }  
                 }
-            }
-            if (cmbCognome.Text == "Contiene:")
-            {
-                for (int i = 0; i < righe; i++)
+
+                //leggo la textbox "Cognome"
+                string Cognome = txtCognome.Text;
+                if(Cognome == "") 
                 {
-                    if (Cognomi[i].ToUpper().Contains(Cognome.ToUpper()))
+                    MessageBox.Show("Inserisci una lettera");
+                    return;
+            
+                }
+
+                //Inizia per:
+                if(cmbCognome.Text == "Inizia per:") 
+                {
+                    lstElenco.Items.Clear();
+                    for(int i = 0; i < righe; i++) 
                     {
-                        lstElenco.Items.Add(Nomi[i] + " " + Cognomi[i] + " " + Citta[i] + " ");
+                        //aggiunta della parole che iniziano per "x"
+                        if (Cognomi[i].ToUpper().StartsWith(Cognome.ToUpper())) 
+                        {
+                            lstElenco.Items.Add(Nomi[i] + " " + Cognomi[i] + " " + Citta[i] + " ");                
+                        }  
+                    }
+                }
+
+                //Contiene:
+                if (cmbCognome.Text == "Contiene:")
+                {
+                    lstElenco.Items.Clear();
+                    for (int i = 0; i < righe; i++)
+                    {
+                        //aggiunta della parole che contengono "x"
+                        if (Cognomi[i].ToUpper().Contains(Cognome.ToUpper()))
+                        {
+                            lstElenco.Items.Add(Nomi[i] + " " + Cognomi[i] + " " + Citta[i] + " ");
+                        }
+                    }
+                }
+
+                //Finisce per:
+                if (cmbCognome.Text == "Finisce per:")
+                {
+                    lstElenco.Items.Clear();
+                    for (int i = 0; i < righe; i++)
+                    {
+                        //aggiunta della parole che finiscono per "x"
+                        if (Cognomi[i].ToUpper().EndsWith(Cognome.ToUpper()))
+                        {
+                            lstElenco.Items.Add(Nomi[i] + " " + Cognomi[i] + " " + Citta[i] + " ");
+                        }
                     }
                 }
             }
-            if (cmbCognome.Text == "Finisce per:")
+            else 
             {
-                for (int i = 0; i < righe; i++)
-                {
-                    if (Cognomi[i].ToUpper().EndsWith(Cognome.ToUpper()))
-                    {
-                        lstElenco.Items.Add(Nomi[i] + " " + Cognomi[i] + " " + Citta[i] + " ");
-                    }
-                }
+                //il file non è stato inserito
+                MessageBox.Show("Inserisci un file valido.");
             }
+            
         }
     }
 }
